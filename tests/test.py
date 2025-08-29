@@ -5,7 +5,9 @@ from random_password_toolkit import (
     generate_with_custom_pool,
     check_password_strength,
     encrypt_password,
-    decrypt_password
+    decrypt_password,
+    RandomNumberGenerator,
+    generate_random_number
 )
 
 if __name__ == "__main__":
@@ -50,3 +52,78 @@ if __name__ == "__main__":
         print(generate_multiple(0))
     except ValueError as error:
         print(error) 
+
+
+
+
+# Function-based usage (simple and quick) test cases
+# -------------------------
+# a) Single 6-digit OTP
+# -------------------------
+otp = generate_random_number(6)
+print(f"Your OTP: {otp}")  # e.g., "483291"
+
+# -------------------------
+# b) Generate multiple order IDs
+# -------------------------
+order_ids = generate_random_number(6, count=5, as_string=True, prefix="ORD-", suffix="-2025")
+print(f"Order IDs: {order_ids}")
+# e.g., ["ORD-123456-2025", "ORD-654321-2025", ...]
+
+# -------------------------
+# c) Batch processing: generate 100 random numbers for simulation
+# -------------------------
+batch_numbers = generate_random_number(8, count=100)
+print(f"Generated {len(batch_numbers)} 8-digit numbers")
+
+# -------------------------
+# d) Database-friendly zero-padded IDs
+# -------------------------
+db_ids = generate_random_number(10, count=3, as_string=True)
+print(f"DB IDs: {db_ids}")  # e.g., ["0001234567", "0009876543", "0003456789"]
+
+# -------------------------
+# e) Error handling
+# -------------------------
+try:
+    generate_random_number(0)
+except ValueError as e:
+    print(f"Error: {e}")  # Length must be a positive integer.
+
+
+
+
+# Class-based usage (advanced/flexible) test cases
+from random_password_toolkit import RandomNumberGenerator
+rng = RandomNumberGenerator()
+
+# -------------------------
+# a) Single 6-digit OTP
+# -------------------------
+otp = rng.generate(6)
+print(f"Your OTP: {otp}")
+
+# -------------------------
+# b) Multiple 6-digit invoice numbers
+# -------------------------
+invoices = rng.generate(6, count=5, as_string=True, prefix="INV-", suffix="-2025")
+print(f"Invoices: {invoices}")
+# e.g., ["INV-123456-2025", "INV-654321-2025", ...]
+
+# -------------------------
+# c) Multiple string IDs for internal tracking
+# -------------------------
+tracking_ids = rng.generate(8, count=10, as_string=True)
+print(f"Tracking IDs: {tracking_ids}")
+
+# -------------------------
+# d) Single database key
+# -------------------------
+db_key = rng.generate(12, as_string=True)
+print(f"DB Key: {db_key}")  # e.g., "000123456789"
+
+# -------------------------
+# e) Advanced usage: repeated calls for batch processing
+# -------------------------
+for i in range(3):
+    print(rng.generate(6, as_string=True, prefix="ORD-", suffix=f"-{2025+i}"))

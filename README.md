@@ -1,33 +1,49 @@
-**# Random Password Toolkit**
+![PyPI Version](https://img.shields.io/pypi/v/random-password-toolkit)
+![Dependencies](https://img.shields.io/librariesio/release/pypi/random-password-toolkit)
+![PyPI - License](https://img.shields.io/pypi/l/random-password-toolkit)
 
-> ****Random Password Toolkit**** is a robust Python package for generating and managing random passwords with advanced features, including encryption, decryption, strength checking, and customizable generation options. This package is ideal for Python developers looking for a secure and feature-rich solution for handling password-related tasks.
+# Random Password Toolkit
 
----
-
-**## Features**
-
-- ****Random Password Generation****: Generate strong and secure passwords.
-- ****Generate Multiple Passwords****: Create multiple passwords in bulk.
-- ****Pronounceable Passwords****: Generate passwords that are easier to read and pronounce.
-- ****Custom Password Generation****: Create passwords using a custom pool of characters.
-- ****Password Strength Checker****: Evaluate the strength of passwords with actionable feedback.
-- ****Password Encryption****: Secure passwords with AES-256 encryption.
-- ****Password Decryption****: Decrypt encrypted passwords safely.
-- ****Customizable Options****: Fully customizable password generation settings.
+> **Random Password Toolkit** is a robust Python package for generating and managing random passwords, and now also generating random numbers with advanced features. It includes encryption, decryption, strength checking, customizable password generation, and flexible random number generation. This package is ideal for Python developers looking for a secure and feature-rich solution for handling password and number generation tasks.
 
 ---
 
-**## Benefits**
+## Features
 
-- ****Security****: Generate highly secure passwords to protect sensitive data.
-- ****Flexibility****: Customize password generation to suit any application.
-- ****Ease of Use****: Simple and intuitive API.
-- ****Compatibility****: Works seamlessly with Python projects.
-- ****Encryption & Decryption****: Securely store and retrieve passwords.
+### Password Features
+
+- **Random Password Generation**: Generate strong and secure passwords.
+- **Generate Multiple Passwords**: Create multiple passwords in bulk.
+- **Pronounceable Passwords**: Generate passwords that are easier to read and pronounce.
+- **Custom Password Generation**: Create passwords using a custom pool of characters.
+- **Password Strength Checker**: Evaluate the strength of passwords with actionable feedback.
+- **Password Encryption & Decryption**: Secure passwords with AES-256 encryption and safely decrypt them.
+- **Customizable Options**: Fully customizable password generation settings.
+
+### Random Number Generator Features
+
+- **Exact Length Random Numbers**: Generate random numbers of any specified length.
+- **Multiple Numbers at Once**: Generate multiple numbers in a single call.
+- **Prefix and Suffix Support**: Add custom prefixes or suffixes to numbers.
+- **String Formatting**: Return numbers as zero-padded strings for database-friendly IDs.
+- **Flexible Usage**: Use via a simple function or through a class for advanced control.
+- **Lightweight & Production-ready**: Fast generation without memory overhead.
+
 
 ---
 
-**## Installation**
+## Benefits
+
+- **Security**: Generate highly secure passwords and unique numbers to protect sensitive data.
+- **Flexibility**: Customize password and number generation to suit any application.
+- **Ease of Use**: Simple and intuitive API for both beginners and advanced users.
+- **Compatibility**: Works seamlessly with Python projects.
+- **Encryption & Decryption**: Securely store and retrieve passwords.
+- **Random Numbers**: Generate secure, unique random numbers for IDs, tokens, or codes; supports custom formatting, bulk generation, and is suitable for production use.
+
+---
+
+## Installation
 
 This package is available through the [PyPI registry](__https://pypi.org/project/random-password-toolkit/__).
 
@@ -42,26 +58,39 @@ pip install random-password-toolkit
 
 ---
 
-**## Options**
+## Options
 
-The following options can be used with the password generation functions:
+### Password Generation Options
 
-| Option                  | Type     | Description                                             | Default |
-|-------------------------|----------|---------------------------------------------------------|---------|
-| `length`                | Integer  | Length of the password.                                 | `10`    |
-| `numbers`               | Boolean  | Include numbers in the password.                        | `false` |
-| `symbols`               | Boolean  | Include symbols in the password.                        | `false` |
-| `lowercase`             | Boolean  | Include lowercase letters.                              | `true`  |
-| `uppercase`             | Boolean  | Include uppercase letters.                              | `true`  |
-| `excludeSimilarCharacters` | Boolean  | Exclude similar characters (e.g., 'i', 'l').         | `false` |
-| `exclude`               | String   | Characters to exclude from the password.                | `''`    |
-| `strict`                | Boolean  | Enforce at least one character from each pool.          | `false` |
+| Option                        | Type      | Description                                                | Default |
+|-------------------------------|-----------|------------------------------------------------------------|---------|
+| `length`                       | Integer   | Length of the password.                                    | 10      |
+| `numbers`                      | Boolean   | Include numbers in the password.                           | false   |
+| `symbols`                      | Boolean   | Include symbols in the password.                           | false   |
+| `lowercase`                    | Boolean   | Include lowercase letters.                                 | true    |
+| `uppercase`                    | Boolean   | Include uppercase letters.                                 | true    |
+| `excludeSimilarCharacters`     | Boolean   | Exclude similar characters (e.g., 'i', 'l').                | false   |
+| `exclude`                      | String    | Characters to exclude from the password.                   | ''      |
+| `strict`                       | Boolean   | Enforce at least one character from each pool.             | false   |
+
+---
+
+### Random Number Generation Options
+
+| Option                        | Type      | Description                                                | Default |
+|-------------------------------|-----------|------------------------------------------------------------|---------|
+| `length`                       | Integer   | Number of digits in the generated number.                  | 6       |
+| `count`                        | Integer   | How many numbers to generate at once.                      | 1       |
+| `as_string`                    | Boolean   | Return numbers as zero-padded strings instead of integers. | false   |
+| `prefix`                       | String    | Optional string to prepend to each generated number.       | ''      |
+| `suffix`                       | String    | Optional string to append to each generated number.        | ''      |
 
 
+---
 
-**## Usage**
+## Usage
 
-**### Importing the Package**
+### Importing the Package
 
 ```python
 from random_password_toolkit import (
@@ -71,13 +100,15 @@ from random_password_toolkit import (
     generate_with_custom_pool,
     check_password_strength,
     encrypt_password,
-    decrypt_password
+    decrypt_password,
+    generate_random_number,
+    RandomNumberGenerator
 )
 ```
 
 ---
 
-**### 1. Generate a Random Password**
+### 1. Generate a Random Password
 
 Generate a single random password with customizable options:
 ```python
@@ -103,7 +134,7 @@ print("Generated password:", generate_password)
 
 ---
 
-**### 2. Generate Multiple Passwords**
+### 2. Generate Multiple Passwords
 
 Generate multiple passwords at once:
 ```python
@@ -120,7 +151,7 @@ print("Multiple passwords:", generate_multiple_password)
 
 ---
 
-**### 3. Generate Pronounceable Passwords**
+### 3. Generate Pronounceable Passwords
 
 Create passwords that are easier to pronounce:
 
@@ -132,7 +163,7 @@ print("Pronounceable password:", pronounceable_password)
 
 ---
 
-**### 4. Generate Password with Custom Pool**
+### 4. Generate Password with Custom Pool
 
 Generate passwords using a specific set of characters:
 
@@ -144,7 +175,7 @@ print("Custom pool password:", generate_with_custom_pool_password)
 
 ---
 
-**### 5. Check Password Strength**
+### 5. Check Password Strength
 
 Evaluate the strength of a password:
 
@@ -161,7 +192,7 @@ print(f"Score: {result['score']}")
 
 ---
 
-**### 6. Encrypt a Password**
+### 6. Encrypt a Password
 
 Securely encrypt a password:
 
@@ -178,7 +209,7 @@ IV: dc23c48d84eed6b07d89c479af6c5845 '''
 
 ---
 
-**### 7. Decrypt a Password**
+### 7. Decrypt a Password
 
 Decrypt an encrypted password:
 
@@ -190,7 +221,7 @@ print("Decrypted Password:", decrypted_password)
 ```
 
 ---
-**### 8. Test generating zero secrets**
+### 8. Test generating zero secrets
 
 Test generating zero secrets
 
@@ -202,6 +233,110 @@ except ValueError as error:
 # output: 'Amount must be greater than 0.'
 
 ```
+
+---
+
+### Random Number Generator Usage Examples
+
+**1. Function-based usage (quick and simple)**
+
+```python
+from random_password_toolkit import generate_random_number
+
+# -------------------------
+# a) Single 6-digit OTP
+# -------------------------
+otp = generate_random_number(6)
+print(f"Your OTP: {otp}")  # e.g., "483291"
+
+# -------------------------
+# b) Generate multiple order IDs
+# -------------------------
+order_ids = generate_random_number(6, count=5, as_string=True, prefix="ORD-", suffix="-2025")
+print(f"Order IDs: {order_ids}")
+# e.g., ["ORD-123456-2025", "ORD-654321-2025", ...]
+
+# -------------------------
+# c) Batch processing: generate 100 random numbers for simulation
+# -------------------------
+batch_numbers = generate_random_number(8, count=100)
+print(f"Generated {len(batch_numbers)} 8-digit numbers")
+
+# -------------------------
+# d) Database-friendly zero-padded IDs
+# -------------------------
+db_ids = generate_random_number(10, count=3, as_string=True)
+print(f"DB IDs: {db_ids}")  # e.g., ["0001234567", "0009876543", "0003456789"]
+
+# -------------------------
+# e) Error handling
+# -------------------------
+try:
+    generate_random_number(0)
+except ValueError as e:
+    print(f"Error: {e}")  # Length must be a positive integer.
+
+```
+
+---
+
+**2. Class-based usage (advanced/flexible)**
+
+```python
+from random_password_toolkit import RandomNumberGenerator
+rng = RandomNumberGenerator()
+
+# -------------------------
+# a) Single 6-digit OTP
+# -------------------------
+otp = rng.generate(6)
+print(f"Your OTP: {otp}")
+
+# -------------------------
+# b) Multiple 6-digit invoice numbers
+# -------------------------
+invoices = rng.generate(6, count=5, as_string=True, prefix="INV-", suffix="-2025")
+print(f"Invoices: {invoices}")
+# e.g., ["INV-123456-2025", "INV-654321-2025", ...]
+
+# -------------------------
+# c) Multiple string IDs for internal tracking
+# -------------------------
+tracking_ids = rng.generate(8, count=10, as_string=True)
+print(f"Tracking IDs: {tracking_ids}")
+
+# -------------------------
+# d) Single database key
+# -------------------------
+db_key = rng.generate(12, as_string=True)
+print(f"DB Key: {db_key}")  # e.g., "000123456789"
+
+# -------------------------
+# e) Advanced usage: repeated calls for batch processing
+# -------------------------
+for i in range(3):
+    print(rng.generate(6, as_string=True, prefix="ORD-", suffix=f"-{2025+i}"))
+
+```
+
+
+---
+
+
+## Where This Package Can Be Used
+
+- **Web & Mobile Applications**: User authentication, OTPs, temporary passwords.
+- **E-commerce & SaaS Platforms**: Order/invoice numbers, discount codes, subscription IDs.
+- **Databases & Backend Systems**: Unique numeric identifiers, zero-padded IDs, batch data generation.
+- **Security & IT Systems**: Password management, API keys, tokens, temporary credentials.
+- **QA & Testing**: Automated test data, simulations, mock data for staging environments.
+- **Educational & Research Use**: Teaching secure password generation, cryptography demos, numeric datasets.
+- **Business & Operations**: Shipment tracking, inventory codes, survey or contest codes.
+- **Developer Tools & Automation**: CLI tools, CI/CD pipelines, auto-generating credentials or IDs.
+
+> **Note**: This module has countless use cases and is widely adopted by enterprises for internal applications. It can be easily integrated into various systems, offering secure passwords, unique numbers, and automation capabilities.
+
+
 
 ---
 

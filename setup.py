@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="random-password-toolkit",
-    version="1.0.0",
+    version="1.0.1",
     author="krishna Tadi",
     description="random-password-toolkit is a robust Python package for generating and managing random passwords with advanced features, including encryption, decryption, strength checking, and customizable generation options. This package is ideal for Python developers looking for a secure and feature-rich solution for handling password-related tasks.",
     long_description=open("README.md").read(),
@@ -18,7 +18,7 @@ setup(
     install_requires=[
         "cryptography==38.0.0"
     ],
-    keywords='"color", "color conversion", "hex to rgb", "rgb to hex", "hex to hsl", "rgb to hsl", "hsl to rgb", "hsl to hex", "color parser", "random color", "web development", "design", "javascript", "css colors", "hex color", "rgb color", "hsl color", "colorcycle", "frontend tools", "color utilities", "color manipulation", "color names", "color library", "web design", "frontend development"',
+    keywords='""random password generator", "password strength checker", "password encryption", "password decryption", "secure password management", "customizable password generation", "Python password toolkit", "Random number generation"',
     project_urls={
     'Documentation': 'https://github.com/krishnatadi/random-password-toolkit-python#readme',
     'Source': 'https://github.com/krishnatadi/random-password-toolkit-python',
