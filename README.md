@@ -4,7 +4,7 @@
 
 # Random Password Toolkit
 
-> **Random Password Toolkit** is a robust Python package for generating and managing random passwords, and now also generating random numbers with advanced features. It includes encryption, decryption, strength checking, customizable password generation, and flexible random number generation. This package is ideal for Python developers looking for a secure and feature-rich solution for handling password and number generation tasks.
+> **Random Password Toolkit** is a robust Python package for generating and managing secure passwords, tokens, API keys, and sensitive data with advanced features. It includes password generation, encryption & decryption, strength checking, secure token and API key generation with expiry support, and flexible data masking utilities. With highly customizable options and a simple API, this package is ideal for Python developers looking for a complete, secure, and feature-rich solution for handling authentication, security, and data privacy tasks.
 
 ---
 
@@ -29,16 +29,36 @@
 - **Flexible Usage**: Use via a simple function or through a class for advanced control.
 - **Lightweight & Production-ready**: Fast generation without memory overhead.
 
+### Token & API Key Features
+
+- **Secure Token Generation**: Generate cryptographically secure tokens using Python’s `secrets` module.
+- **Multiple Token Types**: Support for access, refresh, and generic tokens.
+- **Expiry Support**: Define expiration time for tokens and API keys with built-in validation.
+- **API Key Generator**: Generate secure API keys with configurable bit strength and character types.
+- **Optional Prefix & Suffix**: Add identifiers for environment-based usage if needed.
+- **Reset Token Generation**: Generate secure hash-based tokens for password reset workflows.
+- **Expiry Validation**: Easily check whether a token or API key is expired.
+
+### Data Masking Features
+
+- **Email Masking**: Protect sensitive email data (e.g., `t***@example.com`).
+- **Phone Masking**: Hide sensitive digits in phone numbers.
+- **Custom Data Masking**: Mask any string with configurable visible portions.
+- **Partial Masking**: Mask specific sections of a string using index ranges.
+- **Privacy Utilities**: Useful for logs, UI display, and data protection.
 
 ---
 
 ## Benefits
 
-- **Security**: Generate highly secure passwords and unique numbers to protect sensitive data.
-- **Flexibility**: Customize password and number generation to suit any application.
+- **Security**: Generate highly secure passwords, tokens, API keys, and unique numbers to protect sensitive data.
+- **Flexibility**: Customize password, token, API key, number generation, and masking to suit any application.
 - **Ease of Use**: Simple and intuitive API for both beginners and advanced users.
 - **Compatibility**: Works seamlessly with Python projects.
 - **Encryption & Decryption**: Securely store and retrieve passwords.
+- **Token Management**: Generate and manage tokens with expiry support.
+- **API Key Control**: Create structured, secure API keys suitable for production systems.
+- **Data Privacy**: Protect sensitive information using masking utilities.
 - **Random Numbers**: Generate secure, unique random numbers for IDs, tokens, or codes; supports custom formatting, bulk generation, and is suitable for production use.
 
 ---
@@ -69,7 +89,7 @@ pip install random-password-toolkit
 | `symbols`                      | Boolean   | Include symbols in the password.                           | false   |
 | `lowercase`                    | Boolean   | Include lowercase letters.                                 | true    |
 | `uppercase`                    | Boolean   | Include uppercase letters.                                 | true    |
-| `excludeSimilarCharacters`     | Boolean   | Exclude similar characters (e.g., 'i', 'l').                | false   |
+| `excludeSimilarCharacters`     | Boolean   | Exclude similar characters (e.g., 'i', 'l').               | false   |
 | `exclude`                      | String    | Characters to exclude from the password.                   | ''      |
 | `strict`                       | Boolean   | Enforce at least one character from each pool.             | false   |
 
@@ -85,6 +105,43 @@ pip install random-password-toolkit
 | `prefix`                       | String    | Optional string to prepend to each generated number.       | ''      |
 | `suffix`                       | String    | Optional string to append to each generated number.        | ''      |
 
+---
+
+### Token Generation Options
+
+| Option            | Type              | Description                                                     | Default  |
+|-------------------|-------------------|-----------------------------------------------------------------|----------|
+| `token_type`      | String            | Type of token: `generic`, `access`, `refresh`.                  | generic  |
+| `length`          | Integer           | Length of the generated token.                                 | 32       |
+| `expiry_seconds`  | Integer / Float   | Expiry time in seconds (auto-set for access/refresh if not given). | None     |
+| `prefix`          | String (Optional) | Optional prefix to prepend to token.                           | ''       |
+| `suffix`          | String (Optional) | Optional suffix to append to token.                           | ''       |
+
+---
+
+### API Key Generation Options
+
+| Option            | Type              | Description                                                     | Default  |
+|-------------------|-------------------|-----------------------------------------------------------------|----------|
+| `bits`            | Integer           | Strength of the API key (128, 256, 512, 1024, 2048).            | 256      |
+| `char_type`       | String            | Character set: `letters`, `numbers`, `alphanumeric`, `mixed`.   | mixed    |
+| `separator`       | String (Optional) | Character used to separate groups (e.g., `-`).                  | None     |
+| `group_size`      | Integer           | Number of characters per group when using separator.            | 4        |
+| `expiry_seconds`  | Integer / Float   | Expiry time for the API key in seconds.                         | None     |
+| `prefix`          | String (Optional) | Optional prefix to prepend to API key.                          | ''       |
+| `suffix`          | String (Optional) | Optional suffix to append to API key.                          | ''       |
+
+---
+
+### Data Masking Options
+
+| Option            | Type      | Description                                                     | Default |
+|-------------------|-----------|-----------------------------------------------------------------|---------|
+| `visible_start`   | Integer   | Number of characters to keep visible at the start.              | 2       |
+| `visible_end`     | Integer   | Number of characters to keep visible at the end.                | 2       |
+| `mask_char`       | String    | Character used for masking.                                     | '*'     |
+| `start`           | Integer   | Start index for partial masking.                                | 0       |
+| `end`             | Integer   | End index for partial masking.                                  | None    |
 
 ---
 
@@ -319,6 +376,127 @@ for i in range(3):
 
 ```
 
+
+---
+
+
+---
+
+### Token Generation Usage Examples
+
+```python
+from random_password_toolkit import TokenGenerator
+
+print("=== TOKEN GENERATOR TESTS ===\n")
+
+# =========================
+# WITH PREFIX
+# =========================
+tg1 = TokenGenerator(prefix="TEST_", suffix="_END")
+
+print("---- With Prefix/Suffix ----")
+
+access_token = tg1.generate_token(token_type="access")
+print("Access Token:", access_token)
+
+refresh_token = tg1.generate_token(token_type="refresh")
+print("Refresh Token:", refresh_token)
+
+api_key = tg1.generate_api_key(
+    bits=512,                 # Key strength (128, 256, 512, 1024, 2048)
+    char_type="mixed",        # 'letters', 'numbers', 'alphanumeric', 'mixed'
+    separator="-",            # Optional separator
+    group_size=5,             # Group size for separator formatting
+    expiry_seconds=3600       # Expiry time in seconds (1 hour)
+)
+print("API Key:", api_key)
+
+reset_token = tg1.generate_reset_token("user123")
+print("Reset Token:", reset_token)
+
+print()
+
+# =========================
+# WITHOUT PREFIX
+# =========================
+tg2 = TokenGenerator()
+
+print("---- Without Prefix/Suffix ----")
+
+access_token2 = tg2.generate_token(token_type="access")
+print("Access Token:", access_token2)
+
+generic_token = tg2.generate_token()
+print("Generic Token:", generic_token)
+
+
+api_key2 = tg2.generate_api_key(
+    bits=512,                 # Key strength (128, 256, 512, 1024, 2048)
+    char_type="mixed",        # 'letters', 'numbers', 'alphanumeric', 'mixed'
+    separator="-",            # Optional separator
+    group_size=5,             # Group size for separator formatting
+    expiry_seconds=3600       # Expiry time in seconds (1 hour)
+)
+print("API Key:", api_key2)
+
+# =========================
+# EXPIRY TEST (NO SLEEP)
+# =========================
+print("---- Expiry Test ----")
+
+expired_token = {
+    "token": "dummy",
+    "created_at": 1000,
+    "expires_at": 1001  # already in past
+}
+
+print("Expired Token Data:", expired_token)
+print("Is Expired?", TokenGenerator.is_expired(expired_token))
+
+valid_token = tg2.generate_token(expiry_seconds=1000)
+print("Valid Token:", valid_token)
+print("Is Expired?", TokenGenerator.is_expired(valid_token))
+
+print()
+
+# =========================
+# ERROR HANDLING TEST
+# =========================
+print("---- Error Handling ----")
+
+try:
+    tg2.generate_token(token_type="invalid")
+except Exception as e:
+    print("Error:", e)
+
+try:
+    tg2.generate_api_key(bits=999)
+except Exception as e:
+    print("Error:", e)
+
+try:
+    tg2.generate_reset_token("")
+except Exception as e:
+    print("Error:", e)
+
+print("\n=== TEST COMPLETED ===")
+
+```
+
+---
+
+### Masking Data Usage Examples
+
+
+``` python
+from random_password_toolkit import DataMasker
+
+print(DataMasker.mask_email("test@example.com"))
+print(DataMasker.mask_phone("9876543210"))
+print(DataMasker.mask_custom("SensitiveData123"))
+print(DataMasker.mask_partial("ABCDEFGHIJ", 2, 7))
+
+```
 
 ---
 

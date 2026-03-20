@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 
 setup(
     name="random-password-toolkit",
-    version="1.0.2",
+    version="1.0.3",
     author="krishna Tadi",
-    description="random-password-toolkit is a robust Python package for generating and managing random passwords with advanced features, including encryption, decryption, strength checking, and customizable generation options. This package is ideal for Python developers looking for a secure and feature-rich solution for handling password-related tasks.",
+    description="random-password-toolkit is a robust Python package for generating secure passwords, tokens, and API keys. Includes encryption/decryption, strength checking, expiry-based token generation, and flexible data masking utilities.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/krishnatadi/random-password-toolkit-python",
@@ -18,7 +18,7 @@ setup(
     install_requires=[
         "cryptography>=38.0.0"
     ],
-    keywords='""random password generator", "password strength checker", "password encryption", "password decryption", "secure password management", "customizable password generation", "Python password toolkit", "Random number generation"',
+    keywords='""random password generator", "password strength checker", "password encryption", "password decryption", "secure password management", "customizable password generation", "Python password toolkit", "Random number generation", "token generation", "API key generation", "data masking", "sensitive data protection", "privacy tools"',
     project_urls={
     'Documentation': 'https://github.com/krishnatadi/random-password-toolkit-python#readme',
     'Source': 'https://github.com/krishnatadi/random-password-toolkit-python',

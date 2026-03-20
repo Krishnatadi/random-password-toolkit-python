@@ -7,7 +7,9 @@ from random_password_toolkit import (
     encrypt_password,
     decrypt_password,
     RandomNumberGenerator,
-    generate_random_number
+    generate_random_number,
+    TokenGenerator,
+    DataMasker,
 )
 
 if __name__ == "__main__":
@@ -127,3 +129,97 @@ print(f"DB Key: {db_key}")  # e.g., "000123456789"
 # -------------------------
 for i in range(3):
     print(rng.generate(6, as_string=True, prefix="ORD-", suffix=f"-{2025+i}"))
+
+
+
+#  Masking test cases
+    print(DataMasker.mask_email("test@example.com"))
+    print(DataMasker.mask_phone("9876543210"))
+    print(DataMasker.mask_custom("SensitiveData123"))
+    print(DataMasker.mask_partial("ABCDEFGHIJ", 2, 7))
+
+
+# TokenGenerator test cases
+
+print("=== TOKEN GENERATOR TESTS ===\n")
+
+# =========================
+# WITH PREFIX
+# =========================
+tg1 = TokenGenerator(prefix="TEST_", suffix="_END")
+
+print("---- With Prefix/Suffix ----")
+
+access_token = tg1.generate_token(token_type="access")
+print("Access Token:", access_token)
+
+refresh_token = tg1.generate_token(token_type="refresh")
+print("Refresh Token:", refresh_token)
+
+api_key = tg1.generate_api_key(bits=256)
+print("API Key:", api_key)
+
+reset_token = tg1.generate_reset_token("user123")
+print("Reset Token:", reset_token)
+
+print()
+
+# =========================
+# WITHOUT PREFIX
+# =========================
+tg2 = TokenGenerator()
+
+print("---- Without Prefix/Suffix ----")
+
+access_token2 = tg2.generate_token(token_type="access")
+print("Access Token:", access_token2)
+
+generic_token = tg2.generate_token()
+print("Generic Token:", generic_token)
+
+api_key2 = tg2.generate_api_key(bits=512, separator="-")
+print("API Key:", api_key2)
+
+print()
+
+# =========================
+# EXPIRY TEST (NO SLEEP)
+# =========================
+print("---- Expiry Test ----")
+
+expired_token = {
+    "token": "dummy",
+    "created_at": 1000,
+    "expires_at": 1001  # already in past
+}
+
+print("Expired Token Data:", expired_token)
+print("Is Expired?", TokenGenerator.is_expired(expired_token))
+
+valid_token = tg2.generate_token(expiry_seconds=1000)
+print("Valid Token:", valid_token)
+print("Is Expired?", TokenGenerator.is_expired(valid_token))
+
+print()
+
+# =========================
+# ERROR HANDLING TEST
+# =========================
+print("---- Error Handling ----")
+
+try:
+    tg2.generate_token(token_type="invalid")
+except Exception as e:
+    print("Error:", e)
+
+try:
+    tg2.generate_api_key(bits=999)
+except Exception as e:
+    print("Error:", e)
+
+try:
+    tg2.generate_reset_token("")
+except Exception as e:
+    print("Error:", e)
+
+print("\n=== TEST COMPLETED ===")

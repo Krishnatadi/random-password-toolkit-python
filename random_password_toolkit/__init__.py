@@ -2,6 +2,8 @@ from .generator import generate, generate_multiple, generate_pronounceable_passw
 from .strength_checker import check_password_strength
 from .encryptor import encrypt_password, decrypt_password
 from .random_number_generator import RandomNumberGenerator, generate_random_number
+from .token import TokenGenerator
+from .masking import DataMasker
 
 __all__ = [
     'generate',
@@ -12,6 +14,8 @@ __all__ = [
     'encrypt_password',
     'decrypt_password',
     'RandomNumberGenerator',
-    'generate_random_number'
+    'generate_random_number',
+    'TokenGenerator',
+    'DataMasker'
 ]
 
