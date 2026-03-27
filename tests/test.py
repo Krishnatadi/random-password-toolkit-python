@@ -223,3 +223,29 @@ except Exception as e:
     print("Error:", e)
 
 print("\n=== TEST COMPLETED ===")
+
+
+
+# Sample text containing sensitive data
+text = """
+Hello krishna, please contact me at krishna.demo@example.com or call 9898989898.
+Als, your API key is ABCD-1234-EFGH-5678 and password is MySecret123!
+    """
+
+# Mask configuration
+mask_config = {
+    "emails": True,  # Mask all emails
+    "phones": True,  # Mask all phone numbers
+    "specific": ["MySecret123", "ABCD-1234-EFGH-5678"],  # Mask specific values
+    "patterns": [  # Custom regex patterns
+        {"pattern": r"\b\d{4}-\d{4}-\d{4}-\d{4}\b", "mask_type": "full", "mask_char": "*"},
+        {"pattern": r"MySecret\d+", "mask_type": "full"}
+    ],
+    "mask_char": "*",
+    "visible_start": 2,
+    "visible_end": 2
+}
+
+# Mask the text
+masked_text = DataMasker.mask_text(text, mask_config)
+print(masked_text)

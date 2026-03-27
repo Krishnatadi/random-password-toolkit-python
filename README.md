@@ -4,7 +4,7 @@
 
 # Random Password Toolkit
 
-> **Random Password Toolkit** is a robust Python package for generating and managing secure passwords, tokens, API keys, and sensitive data with advanced features. It includes password generation, encryption & decryption, strength checking, secure token and API key generation with expiry support, and flexible data masking utilities. With highly customizable options and a simple API, this package is ideal for Python developers looking for a complete, secure, and feature-rich solution for handling authentication, security, and data privacy tasks.
+> **Random Password Toolkit** is a robust AI-powered Python package designed for generating and managing secure passwords, tokens, API keys, and sensitive data. Developed for AI/GenAI workflows, LLMs, and RAG pipelines, it includes password generation, encryption & decryption, strength checking, secure token and API key generation with expiry support, and flexible data masking utilities. With highly customizable options and a simple API, this package is ideal for Python developers looking for a complete, secure, and AI-ready solution for authentication, security, and privacy-focused data handling.
 
 ---
 
@@ -46,6 +46,7 @@
 - **Custom Data Masking**: Mask any string with configurable visible portions.
 - **Partial Masking**: Mask specific sections of a string using index ranges.
 - **Privacy Utilities**: Useful for logs, UI display, and data protection.
+- **AI/GenAI Ready**: Automatically preprocess and anonymize PII for LLMs, generative AI, and retrieval-augmented generation (RAG) systems.
 
 ---
 
@@ -135,13 +136,17 @@ pip install random-password-toolkit
 
 ### Data Masking Options
 
-| Option            | Type      | Description                                                     | Default |
-|-------------------|-----------|-----------------------------------------------------------------|---------|
-| `visible_start`   | Integer   | Number of characters to keep visible at the start.              | 2       |
-| `visible_end`     | Integer   | Number of characters to keep visible at the end.                | 2       |
-| `mask_char`       | String    | Character used for masking.                                     | '*'     |
-| `start`           | Integer   | Start index for partial masking.                                | 0       |
-| `end`             | Integer   | End index for partial masking.                                  | None    |
+| Option            | Type      | Description                                                                                       | Default |
+|-------------------|-----------|---------------------------------------------------------------------------------------------------|---------|
+| `visible_start`   | Integer   | Number of characters to keep visible at the start for custom masking.                             | 2       |
+| `visible_end`     | Integer   | Number of characters to keep visible at the end for custom masking.                               | 2       |
+| `mask_char`       | String    | Character used for masking.                                                                      | '*'     |
+| `start`           | Integer   | Start index for partial masking.                                                                  | 0       |
+| `end`             | Integer   | End index for partial masking.                                                                    | None    |
+| `emails`          | Boolean   | Automatically detect and mask all email addresses in the text.                                    | False   |
+| `phones`          | Boolean   | Automatically detect and mask all phone numbers in the text.                                      | False   |
+| `specific`        | List      | List of specific values (e.g., passwords, tokens) to mask exactly as provided.                   | []      |
+| `patterns`        | List      | List of custom regex patterns with masking type (`full`, `partial`, `custom`) and optional params. | []      |
 
 ---
 
@@ -496,6 +501,37 @@ print(DataMasker.mask_phone("9876543210"))
 print(DataMasker.mask_custom("SensitiveData123"))
 print(DataMasker.mask_partial("ABCDEFGHIJ", 2, 7))
 
+
+
+# Sample text containing sensitive data
+text = """
+    Hello krishna, please contact me at krishna.demo@example.com or call 9898989898.
+    Also, your API key is ABCD-1234-EFGH-5678 and password is MySecret123!
+    """
+
+# Mask configuration
+mask_config = {
+    "emails": True,  # Mask all emails
+    "phones": True,  # Mask all phone numbers
+    "specific": ["MySecret123", "ABCD-1234-EFGH-5678"],  # Mask specific values
+    "patterns": [  # Custom regex patterns
+        {"pattern": r"\b\d{4}-\d{4}-\d{4}-\d{4}\b", "mask_type": "full", "mask_char": "*"},
+        {"pattern": r"MySecret\d+", "mask_type": "full"}
+    ],
+    "mask_char": "*",
+    "visible_start": 2,
+    "visible_end": 2
+}
+
+# Mask the text
+masked_text = DataMasker.mask_text(text, mask_config)
+
+print(masked_text)
+
+#output
+Hello John, please contact me at j***@example.com or call 98******10.
+Also, your API key is **************** and password is ***********!
+
 ```
 
 ---
@@ -511,6 +547,10 @@ print(DataMasker.mask_partial("ABCDEFGHIJ", 2, 7))
 - **Educational & Research Use**: Teaching secure password generation, cryptography demos, numeric datasets.
 - **Business & Operations**: Shipment tracking, inventory codes, survey or contest codes.
 - **Developer Tools & Automation**: CLI tools, CI/CD pipelines, auto-generating credentials or IDs.
+- **AI & Machine Learning Pipelines**: Preprocessing sensitive data before sending to LLMs, GenAI, or RAG systems.
+- **Generative AI Applications**: Masking PII and confidential information for AI content generation or model training.
+- **LLM & RAG Workflows**: Ensuring safe data handling and privacy compliance when querying or indexing documents.
+- **AI/GenAI Research**: Data anonymization for training, testing, and evaluating generative AI models.
 
 > **Note**: This module has countless use cases and is widely adopted by enterprises for internal applications. It can be easily integrated into various systems, offering secure passwords, unique numbers, and automation capabilities.
 

@@ -1,3 +1,5 @@
+import re
+
 """
 Utility class for masking sensitive data such as email, phone numbers,
 or any custom string. Helps in protecting user privacy in logs, UI, etc.
@@ -105,3 +107,116 @@ class DataMasker:
             mask_char * (end - start) +
             data[end:]
         )
+
+    @staticmethod
+    def mask_text(text, config):
+        """
+        Mask full text using config.
+
+        config = {
+            "emails": True,
+            "phones": True,
+            "mask_char": "*",
+
+            "specific": ["value1", "value2"],
+
+            "patterns": [
+                {
+                    "regex": r"...",
+                    "type": "full | partial | custom",
+                    "start": 0,
+                    "end": 5,
+                    "visible_start": 2,
+                    "visible_end": 2
+                }
+            ]
+        }
+        """
+
+        if not isinstance(text, str):
+            raise TypeError("Text must be a string")
+
+        result = text
+        mask_char = config.get("mask_char", "*")
+
+        # Emails
+        if config.get("emails"):
+            result = re.sub(
+                r'\b[\w\.-]+@[\w\.-]+\.\w+\b',
+                lambda m: DataMasker.mask_email(m.group()),
+                result
+            )
+
+        # Phones
+        if config.get("phones"):
+            result = re.sub(
+                r'\b\d{10,15}\b',
+                lambda m: DataMasker.mask_phone(m.group()),
+                result
+            )
+
+        # Specific values
+        for item in config.get("specific", []):
+            result = result.replace(
+                item,
+                DataMasker.mask_custom(item, mask_char=mask_char)
+            )
+
+        # Custom patterns
+        for rule in config.get("patterns", []):
+            regex = rule.get("regex")
+            if not regex:
+                continue
+
+            def replacer(m):
+                value = m.group()
+                t = rule.get("type", "custom")
+
+                if t == "full":
+                    return mask_char * len(value)
+
+                elif t == "partial":
+                    return DataMasker.mask_partial(
+                        value,
+                        start=rule.get("start", 0),
+                        end=rule.get("end"),
+                        mask_char=mask_char
+                    )
+
+                else:
+                    return DataMasker.mask_custom(
+                        value,
+                        visible_start=rule.get("visible_start", 2),
+                        visible_end=rule.get("visible_end", 2),
+                        mask_char=mask_char
+                    )
+
+            result = re.sub(regex, replacer, result)
+
+        return result
+
+
+# Example Usage
+if __name__ == "__main__":
+    text = """
+    Email: john@example.com
+    Phone: 9876543210
+    Token: ABCD-1234-XYZ
+    Password: mysecret123
+    """
+
+    config = {
+        "emails": True,
+        "phones": True,
+        "specific": ["mysecret123"],
+        "patterns": [
+            {
+                "regex": r"[A-Z]{4}-\d{4}-[A-Z]{3}",
+                "type": "partial",
+                "start": 2,
+                "end": 10
+            }
+        ]
+    }
+
+    print(DataMasker.mask_text(text, config))
