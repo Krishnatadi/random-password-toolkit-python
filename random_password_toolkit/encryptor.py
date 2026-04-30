@@ -2,9 +2,68 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.backends import default_backend
 import os
+import json
+from pathlib import Path
 
 # Key and IV (Initialization Vector) settings
-key = os.urandom(32)  # 256-bit key
+def _get_or_create_key():
+    """
+    Get encryption key from multiple sources (in order of priority):
+    1. Environment variable: RPT_ENCRYPTION_KEY
+    2. .env file in current directory with RPT_ENCRYPTION_KEY
+    3. Local config file: ~/.rpt_config/encryption_key
+    4. Generate new key if none exist (local storage only)
+    """
+    
+    # Priority 1: Check environment variable
+    env_key = os.getenv('RPT_ENCRYPTION_KEY')
+    if env_key:
+        try:
+            return bytes.fromhex(env_key)
+        except ValueError:
+            print("Warning: RPT_ENCRYPTION_KEY is not a valid hex string")
+    
+    # Priority 2: Check .env file in current directory
+    env_file = Path('.env')
+    if env_file.exists():
+        try:
+            with open(env_file, 'r') as f:
+                for line in f:
+                    line = line.strip()
+                    if line.startswith('RPT_ENCRYPTION_KEY='):
+                        key_hex = line.split('=', 1)[1].strip('"\'')
+                        return bytes.fromhex(key_hex)
+        except Exception as e:
+            print(f"Warning: Could not read .env file: {e}")
+    
+    # Priority 3: Check local config file
+    key_dir = Path.home() / ".rpt_config"
+    key_file = key_dir / "encryption_key"
+    
+    if key_file.exists():
+        try:
+            with open(key_file, 'r') as f:
+                key_data = json.load(f)
+                return bytes.fromhex(key_data['key'])
+        except Exception as e:
+            print(f"Warning: Could not read local key file: {e}")
+    
+    # Priority 4: Generate new key (stored locally only)
+    new_key = os.urandom(32)  # 256-bit key
+    try:
+        key_dir.mkdir(exist_ok=True)
+        with open(key_file, 'w') as f:
+            json.dump({'key': new_key.hex()}, f)
+        # Secure file permissions (read/write for owner only)
+        os.chmod(key_file, 0o600)
+        print(f"Generated new encryption key at: {key_file}")
+        print("For production, set RPT_ENCRYPTION_KEY environment variable or use .env file")
+    except Exception as e:
+        print(f"Warning: Could not save key locally: {e}")
+    
+    return new_key
+
+key = _get_or_create_key()
 algorithm = algorithms.AES(key)
 backend = default_backend()
 
@@ -58,4 +117,3 @@ def decrypt_password(encrypted_password_hex, iv_hex):
     decrypted_password = unpadder.update(decrypted_padded_password) + unpadder.finalize()
 
     return decrypted_password.decode()
-

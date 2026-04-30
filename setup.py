@@ -2,9 +2,9 @@ from setuptools import setup, find_packages
 
 setup(
     name="random-password-toolkit",
-    version="1.0.4",
+    version="1.0.5",
     author="krishna Tadi",
-    description="AI Toolkit: random-password-toolkit is a robust Python package for generating secure passwords, tokens, and API keys. Includes encryption/decryption, strength checking, expiry-based token generation, and flexible data masking utilities for LLM and RAG workflows.",
+    description="AI Toolkit: random-password-toolkit is a robust Python package CLI tool for generating secure passwords, tokens, and API keys. Includes encryption/decryption, strength checking, expiry-based token generation, and flexible data masking utilities for LLM and RAG workflows.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/krishnatadi/random-password-toolkit-python",
@@ -23,6 +23,11 @@ setup(
     'Documentation': 'https://github.com/krishnatadi/random-password-toolkit-python#readme',
     'Source': 'https://github.com/krishnatadi/random-password-toolkit-python',
     'Issue Tracker': 'https://github.com/krishnatadi/random-password-toolkit-python/issues',
+    },
+    entry_points={
+        'console_scripts': [
+            'rpt=random_password_toolkit.cli:main',
+        ],
     },
     license='MIT'
 )
